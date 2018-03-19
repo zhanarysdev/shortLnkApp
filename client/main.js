@@ -13,11 +13,16 @@ import NotFound from './../imports/ui/NotFound'
 
 const unauthenticatedPages = ['/', '/signup']
 const authenticatedPages = ['/link']
+const onEnterPublicPage = () => {
+  if(Meteor.userId()) {
+    window.location = 'link'
+  }
+}
 const routes = (
   <Router>
     <Switch>
-      <Route path="/" exact component={Login}/>
-      <Route path="/signup" component={Signup}/>
+      <Route path="/" exact component={Login} onEnter={onEnterPublicPage}/>
+      <Route path="/signup" component={Signup} onEnter={onEnterPublicPage}/>
       <Route path="/link" component={Link}/>
       <Route component={NotFound}/>
     </Switch>
@@ -26,9 +31,7 @@ const routes = (
 
 Tracker.autorun(()=>{
   const isAuthenticate = !!Meteor.userId();
-  console.log('auth', isAuthenticate)
   const pathname = location.pathname
-  console.log(pathname)
   const isUnauthenticatedPage = unauthenticatedPages.includes(pathname)
   const isAuthenticatedPages = authenticatedPages.includes(pathname)
 
